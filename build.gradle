@@ -11,6 +11,8 @@ java {
     sourceCompatibility = '17'
 }
 
+
+
 repositories {
     mavenCentral()
 }
@@ -34,7 +36,8 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    implementation("io.minio:minio:8.5.8")
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.663'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
 }
 
 tasks.named('test') {

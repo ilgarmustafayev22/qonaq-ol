@@ -49,4 +49,28 @@ public class GlobalExceptionHandler {
                         LocalDateTime.now()));
     }
 
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = PhotoNotFoundException.class)
+    public ResponseEntity<ErrorDto<PhotoNotFoundException>> handleIllegalArgumentException(PhotoNotFoundException ex) {
+        log.error(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorDto<>(404004,
+                        ex.getMessage(),
+                        PhotoNotFoundException.class,
+                        LocalDateTime.now()));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = EventNotFoundException.class)
+    public ResponseEntity<ErrorDto<EventNotFoundException>> handleIllegalArgumentException(EventNotFoundException ex) {
+        log.error(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorDto<>(404005,
+                        ex.getMessage(),
+                        EventNotFoundException.class,
+                        LocalDateTime.now()));
+    }
+
 }

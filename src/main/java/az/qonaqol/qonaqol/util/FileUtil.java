@@ -1,82 +1,80 @@
 package az.qonaqol.qonaqol.util;
 
-import az.qonaqol.qonaqol.dao.entity.EventPhotoEntity;
-import io.minio.GetObjectArgs;
-import io.minio.MinioClient;
-import io.minio.PutObjectArgs;
-import io.minio.messages.Bucket;
+
+import az.qonaqol.qonaqol.exception.PhotoNotFoundException;
+import az.qonaqol.qonaqol.exception.UserNotFoundException;
+import com.amazonaws.services.s3.AmazonS3;
+import com.amazonaws.services.s3.model.ObjectMetadata;
+import com.amazonaws.services.s3.model.S3Object;
+import com.amazonaws.services.s3.model.S3ObjectInputStream;
+import com.amazonaws.util.IOUtils;
 import lombok.RequiredArgsConstructor;
-import org.apache.commons.compress.utils.IOUtils;
-import org.springframework.beans.factory.annotation.Value;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 
+@Slf4j
 @Component
 @RequiredArgsConstructor
 public class FileUtil {
 
-    @Value("${minio.url}")
-    private String url;
+    private final AmazonS3 s3Client;
+    public static final String BUCKET_NAME = "qonaqol";
 
-    @Value("${minio.bucketName}")
-    private String bucketName;
-
-    @Value("${minio.defaultFolder}")
-    private String defaultBaseFolder;
-
-    private final MinioClient minioClient;
-
-
-
-    public List<Bucket> getAllBuckets() {
-        try {
-            return minioClient.listBuckets();
-        } catch (Exception e) {
-            throw new RuntimeException(e.getMessage());
+    public void uploadFiles(MultipartFile[] files) {
+        if (files == null || files.length == 0) {
+            throw new PhotoNotFoundException("No files to upload");
         }
-
-    }
-
-
-    public void uploadFile(MultipartFile[] files) {
         for (MultipartFile file : files) {
-            if (file.isEmpty()) {
-                continue;
-            }
-          //  String fileUrl = url + defaultBaseFolder + file.getOriginalFilename();
-
-           //// userMetadata.put("contentType", eventPhoto.getType());
-            try {
-                InputStream inputStream = file.getInputStream();
-                minioClient.putObject(PutObjectArgs.builder()
-                        .bucket(bucketName)
-                        .object(file.getOriginalFilename())
-                        .stream(inputStream, inputStream.available(), -1)
-                        //.userMetadata(userMetadata)
-                        .build());
-            } catch (Exception e) {
-                e.printStackTrace();
+            ObjectMetadata metadata = new ObjectMetadata();
+            metadata.setContentType(file.getContentType());
+            metadata.setContentLength(file.getSize());
+            try (InputStream inputStream = file.getInputStream()) {
+                s3Client.putObject(BUCKET_NAME, file.getOriginalFilename(), inputStream, metadata);
+            } catch (IOException e) {
+                log.error("Error occurred while uploading file to S3", e);
             }
         }
     }
 
     public byte[] downloadFile(String fileName) {
-        try {
-            InputStream inputStream = minioClient.getObject(
-                    GetObjectArgs.builder()
-                            .bucket(bucketName)
-                            .object(fileName)
-                            .build());
+        S3Object s3Object = s3Client.getObject(BUCKET_NAME, fileName);
+        try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
             return IOUtils.toByteArray(inputStream);
-        } catch (Exception e) {
-            // Instead of throwing a RuntimeException, you may want to log the error or handle it appropriately
-            throw new RuntimeException("Failed to download image: " + e.getMessage());
+        } catch (IOException e) {
+            throw new PhotoNotFoundException("Photo not found on S3: " + fileName);
         }
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

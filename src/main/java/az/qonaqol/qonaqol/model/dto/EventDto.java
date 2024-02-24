@@ -1,38 +1,35 @@
 package az.qonaqol.qonaqol.model.dto;
 
-import az.qonaqol.qonaqol.dao.entity.EventPhotoEntity;
-import az.qonaqol.qonaqol.dao.entity.UserEntity;
 import az.qonaqol.qonaqol.model.enums.EventCategory;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
-import org.mapstruct.Mapper;
-import org.mapstruct.ReportingPolicy;
+import az.qonaqol.qonaqol.model.enums.EventLanguage;
+import lombok.*;
+import lombok.experimental.FieldDefaults;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
+@Getter
+@Setter
+@Builder
+@ToString
+@EqualsAndHashCode
+@NoArgsConstructor
+@AllArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventDto {
 
-    private Long id;
-    private String eventName;
-    private String description;
-    private EventCategory category;
-    private BigDecimal eventPrice;
-    private LocalDate eventDate;
-    private String eventStartTime;
-    private String eventEndTime;
-    private String eventLocation;
-    private String contact;
-    private Integer maxParticipants;
-
-    //@OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    //private List<EventPhotoEntity> photos = new ArrayList<>(5);
-
-    private Long userId;
-
-    private LocalDateTime createdDate;
+    String eventName;
+    String description;
+    EventCategory category;
+    EventLanguage language;
+    BigDecimal eventPrice;
+    LocalDate eventDate;
+    String eventStartTime;
+    String eventEndTime;
+    String eventLocation;
+    String contact;
+    Integer maxParticipants;
+    List<String> photoUrls;
 
 }

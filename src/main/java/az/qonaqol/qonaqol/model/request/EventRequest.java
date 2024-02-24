@@ -1,35 +1,57 @@
 package az.qonaqol.qonaqol.model.request;
 
-import az.qonaqol.qonaqol.dao.entity.EventPhotoEntity;
 import az.qonaqol.qonaqol.model.enums.EventCategory;
 import az.qonaqol.qonaqol.model.enums.EventLanguage;
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.OneToMany;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import org.hibernate.validator.constraints.EAN;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateEventRequest {
+public class EventRequest {
 
-    private String eventName;
-    private String description;
-    private EventCategory category;
-    private EventLanguage language;
-    private BigDecimal eventPrice;
-    private LocalDate eventDate;
-    private String eventStartTime;
-    private String eventEndTime;
-    private String eventLocation;
-    private String contact;
-    private Integer maxParticipants;
+    @NotNull
     private Long userId;
+
+    @NotBlank
+    private String eventName;
+
+    @NotBlank
+    private String description;
+
+    @NotNull
+    private EventCategory category;
+
+    @NotNull
+    private EventLanguage language;
+
+    @NotNull
+    private BigDecimal eventPrice;
+
+    @NotNull
+    private LocalDate eventDate;
+
+    @NotBlank
+    private String eventStartTime;
+
+    @NotBlank
+    private String eventEndTime;
+
+    @NotBlank
+    private String eventLocation;
+
+    @NotBlank
+    private String contact;
+
+    @NotNull
+    private Integer maxParticipants;
 
 }

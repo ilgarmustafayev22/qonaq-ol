@@ -38,7 +38,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                     .fullName(signupRequest.getFullName())
                     .email(signupRequest.getEmail())
                     .password(encoder.encode(signupRequest.getPassword()))
-                    .role(UserRole.ADMIN)
+                    .role(UserRole.USER)
                     .createdDate(LocalDateTime.now())
                     .build();
 

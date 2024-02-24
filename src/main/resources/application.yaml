@@ -2,11 +2,14 @@ server:
   port: 8081
 
 spring:
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: "jdbc:postgresql://localhost:5432/qonaqol"
-    username: postgres
-    password: mysecretpassword
+    url: jdbc:postgresql://${HOST:dpg-cnavkhicn0vc73927efg-a.oregon-postgres.render.com}:5432/${POSTGRES_DB:qonaqol}
+    username: ${DB_USERNAME:ilqar}
+    password: ${DB_PASSWORD:YI09u9Z2NMQhEAqTMFR0oU0WuDBhcWc0}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -20,20 +23,26 @@ spring:
       hibernate:
         format_sql: true
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 8MB
+      max-request-size: 8MB
 
 logging:
   level:
     org.springframework.security: trace
 
-minio:
-  url: http://localhost:9000
-  accessKey: VpAtKSxzqKBjNi4g7k9P
-  secretKey: Bnxey32cHcJiGL9eVQdgJTF95Vsr1VqxPMoHdo2z
-  bucketName: qonaq-ol
-  defaultFolder: /
+
+
 
 springdoc:
   api-docs:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT

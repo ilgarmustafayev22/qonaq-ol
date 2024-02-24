@@ -2,9 +2,12 @@ package az.qonaqol.qonaqol.dao.entity;
 
 import az.qonaqol.qonaqol.model.enums.EventCategory;
 import az.qonaqol.qonaqol.model.enums.EventLanguage;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Pattern;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
@@ -61,18 +64,21 @@ public class EventEntity {
     @Column(name = "max_participants", length = 3, nullable = false)
     private Integer maxParticipants;
 
-    //@OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    //private List<EventPhotoEntity> photos = new ArrayList<>(5);
-
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
     private UserEntity user;
 
-    private LocalDateTime createdDate;
+    @CreationTimestamp
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
 
-    @ElementCollection
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+    @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "photo_urls")
-    private List<String> photoUrls = new ArrayList<>();
-
+    private List<String> photoUrls = new ArrayList<>(5);
 
 }
