@@ -26,4 +26,6 @@ public interface EventMapper {
 
     EventDto toDto(EventEntity entity);
 
+    List<EventDto> toDtoList(List<EventEntity> entityList);
+
 }

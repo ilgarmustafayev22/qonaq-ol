@@ -1,5 +1,6 @@
-package az.qonaqol.qonaqol.exception;
+package az.qonaqol.qonaqol.exception.handler;
 
+import az.qonaqol.qonaqol.exception.*;
 import az.qonaqol.qonaqol.model.dto.ErrorDto;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,7 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDto<UserNotFoundException>> handleUserNotFoundException(UserNotFoundException ex) {
         log.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorDto<>(404001,
+                .body(new ErrorDto<>(404,
                         ex.getMessage(),
                         UserNotFoundException.class,
                         LocalDateTime.now()));
@@ -31,7 +32,7 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorDto<>(404002,
+                .body(new ErrorDto<>(404,
                         ex.getMessage(),
                         UserAlreadyExistsException.class,
                         LocalDateTime.now()));
@@ -43,33 +44,45 @@ public class GlobalExceptionHandler {
         log.error(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorDto<>(404003,
+                .body(new ErrorDto<>(404,
                         ex.getMessage(),
                         IllegalArgumentException.class,
                         LocalDateTime.now()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = PhotoNotFoundException.class)
-    public ResponseEntity<ErrorDto<PhotoNotFoundException>> handleIllegalArgumentException(PhotoNotFoundException ex) {
+    @ExceptionHandler(value = EventNotFoundException.class)
+    public ResponseEntity<ErrorDto<EventNotFoundException>> handleEventNotFoundException(EventNotFoundException ex) {
         log.error(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorDto<>(404004,
+                .body(new ErrorDto<>(404,
+                        ex.getMessage(),
+                        EventNotFoundException.class,
+                        LocalDateTime.now()));
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(value = PhotoNotFoundException.class)
+    public ResponseEntity<ErrorDto<PhotoNotFoundException>> handlePhotoNotFoundException(PhotoNotFoundException ex) {
+        log.error(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErrorDto<>(404,
                         ex.getMessage(),
                         PhotoNotFoundException.class,
                         LocalDateTime.now()));
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(value = EventNotFoundException.class)
-    public ResponseEntity<ErrorDto<EventNotFoundException>> handleIllegalArgumentException(EventNotFoundException ex) {
+    @ExceptionHandler(value = GiftCardNotFoundException.class)
+    public ResponseEntity<ErrorDto<GiftCardNotFoundException>> handleGiftCardNotFoundException(GiftCardNotFoundException ex) {
         log.error(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
-                .body(new ErrorDto<>(404005,
+                .body(new ErrorDto<>(404,
                         ex.getMessage(),
-                        EventNotFoundException.class,
+                        GiftCardNotFoundException.class,
                         LocalDateTime.now()));
     }
 

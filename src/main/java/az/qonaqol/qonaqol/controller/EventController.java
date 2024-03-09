@@ -16,6 +16,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Validated
@@ -33,16 +34,23 @@ public class EventController {
             @ApiResponse(responseCode = "403", description = "Forbidden"),
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
-    @PostMapping("/create-event")
-    public ResponseEntity<Long> createEvent(@RequestBody @Valid EventRequest eventRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventRequest));
+    @PostMapping(path = "/create-event", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Long> createEvent(@RequestPart("mainPhoto") MultipartFile file,
+                                            @RequestPart("photos") MultipartFile[] files,
+                                            EventRequest eventRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventRequest, file, files));
     }
 
-    @PostMapping(path = "/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Void> uploadPhotos(@RequestBody MultipartFile[] files, @RequestParam("eventId") long eventId) {
-        eventService.uploadPhotos(eventId, files);
-        return ResponseEntity.ok().build();
+    @PostMapping( "/create-event-test")
+    public ResponseEntity<Long> createEventTest(EventRequest eventRequest) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEventTest(eventRequest));
     }
+
+    // @PostMapping(path = "/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // public ResponseEntity<Void> uploadPhotos(@RequestBody MultipartFile[] files, @RequestParam("eventId") long eventId) {
+    //     eventService.uploadPhotos(eventId, files);
+    //     return ResponseEntity.ok().build();
+    // }
 
     @GetMapping("/{eventId}")
     public ResponseEntity<EventDto> findById(@Valid @PathVariable long eventId) {
@@ -59,6 +67,19 @@ public class EventController {
         return ResponseEntity.ok(eventService.findByCategory(category));
     }
 
+    @GetMapping("/date-between")
+    public ResponseEntity<List<EventDto>> findByEventDateBetween(@RequestParam("startDate") LocalDate startDate,
+                                                                 @RequestParam("endDate") LocalDate endDate) {
+        return ResponseEntity.ok(eventService.findByEventDateBetween(startDate, endDate));
+    }
+
+    @GetMapping("/date-between-category")
+    public ResponseEntity<List<EventDto>> findByEventDateBetweenAndCategory(@RequestParam("startDate") LocalDate startDate,
+                                                                            @RequestParam("endDate") LocalDate endDate,
+                                                                            @RequestParam("category") EventCategory category) {
+        return ResponseEntity.ok(eventService.findByEventDateBetweenAndCategory(startDate, endDate, category));
+    }
+
     @PutMapping("/{eventId}")
     public ResponseEntity<Long> updateEvent(@PathVariable long eventId,
                                             @RequestBody EventRequest eventRequest) {
@@ -71,18 +92,18 @@ public class EventController {
         return ResponseEntity.ok().build();
     }
 
-   // @GetMapping("/photosNames/{eventId}")
-   // public ResponseEntity<List<String>> getPhotosNames(@Valid @PathVariable long eventId) {
-   //     return ResponseEntity.ok(eventService.findPhotoNamesByEventId(eventId));
-   // }
+    // @GetMapping("/photosNames/{eventId}")
+    // public ResponseEntity<List<String>> getPhotosNames(@Valid @PathVariable long eventId) {
+    //     return ResponseEntity.ok(eventService.findPhotoNamesByEventId(eventId));
+    // }
 
-   // @GetMapping("/download-photo/{photoName}")
-   // public ResponseEntity<byte[]> downloadFile(@PathVariable("photoName") String fileName) {
-   //     byte[] imageData = eventService.downloadPhoto(fileName);
-   //     return ResponseEntity.status(HttpStatus.OK)
-   //             .contentType(MediaType.valueOf("image/png"))
-   //             .body(imageData);
-   // }
+    // @GetMapping("/download-photo/{photoName}")
+    // public ResponseEntity<byte[]> downloadFile(@PathVariable("photoName") String fileName) {
+    //     byte[] imageData = eventService.downloadPhoto(fileName);
+    //     return ResponseEntity.status(HttpStatus.OK)
+    //             .contentType(MediaType.valueOf("image/png"))
+    //             .body(imageData);
+    // }
 
     // @GetMapping("/download/{fileName}")
     // public ResponseEntity<ByteArrayResource> downloadFile(@PathVariable String fileName) {

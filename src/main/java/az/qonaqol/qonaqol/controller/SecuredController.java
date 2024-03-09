@@ -11,4 +11,9 @@ public class SecuredController {
         return "This is a secured endpoint.";
     }
 
+    @GetMapping("/api/v1/non-secured")
+    public String nonSecuredEndpoint() {
+        return "This is a nonSecured endpoint.";
+    }
+
 }

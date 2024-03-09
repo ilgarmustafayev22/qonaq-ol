@@ -1,11 +1,13 @@
 package az.qonaqol.qonaqol.service.impl;
 
+import az.qonaqol.qonaqol.model.enums.TokenType;
 import az.qonaqol.qonaqol.service.JwtService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +21,14 @@ import java.util.function.Function;
 @Service
 public class JwtServiceImpl implements JwtService {
 
-    private static final String SECRET_KEY = "4xBJ9w5cTn7CxHJnJM9vJ1Sjz3B2mlLCG6vLghwFJxQ=";
+    @Value("${application.security.jwt.secret-key}")
+    private String secretKey;
+
+    @Value("${application.security.jwt.expiration}")
+    private String accessTokenExpiration;
+
+    @Value("${application.security.jwt.refresh-token.expiration}")
+    private String refreshTokenExpiration;
 
     @Override
     public String extractUsername(String token) {
@@ -47,7 +56,7 @@ public class JwtServiceImpl implements JwtService {
     }
 
     @Override
-    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails, TokenType tokenType) {
         return Jwts
                 .builder()
                 .claims()
@@ -55,19 +64,20 @@ public class JwtServiceImpl implements JwtService {
                 .add(extraClaims)
                 .subject(userDetails.getUsername())
                 .issuedAt(new Date(System.currentTimeMillis()))
-                .expiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24))  //valid for 24 hours 1000ms
+                .expiration(new Date(System.currentTimeMillis() + (tokenType == TokenType.ACCESS ?
+                        Long.parseLong(accessTokenExpiration) : Long.parseLong(refreshTokenExpiration))))  //valid for 24 hours 1000ms
                 .and()
                 .signWith(getSignInKey()) // JwtBuilder signWith(Key key) throws InvalidKeyException;
                 .compact();
     }
 
     @Override
-    public String generateToken(UserDetails userDetails) {
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, TokenType tokenType) {
+        return generateToken(new HashMap<>(), userDetails, tokenType);
     }
 
     private SecretKey getSignInKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 

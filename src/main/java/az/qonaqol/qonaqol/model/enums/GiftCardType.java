@@ -5,11 +5,9 @@ import lombok.RequiredArgsConstructor;
 
 @Getter
 @RequiredArgsConstructor
-public enum EventLanguage {
+public enum GiftCardType {
 
-    AZERBAIJANI("Azərbaycan"),
-    ENGLISH("English"),
-    RUSSIAN("Русский");
+    AZN_50("50 AZN"), AZN_100("100 AZN"), AZN_200("200 AZN");
 
     private final String value;
 

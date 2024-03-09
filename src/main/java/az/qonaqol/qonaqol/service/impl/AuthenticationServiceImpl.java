@@ -3,7 +3,9 @@ package az.qonaqol.qonaqol.service.impl;
 import az.qonaqol.qonaqol.dao.entity.UserEntity;
 import az.qonaqol.qonaqol.dao.repository.UserRepository;
 import az.qonaqol.qonaqol.exception.UserNotFoundException;
-import az.qonaqol.qonaqol.jwt.JwtAuthenticationResponse;
+import az.qonaqol.qonaqol.model.dto.AuthenticationDto;
+import az.qonaqol.qonaqol.model.enums.TokenType;
+import az.qonaqol.qonaqol.security.jwt.TokenPair;
 import az.qonaqol.qonaqol.model.enums.UserRole;
 import az.qonaqol.qonaqol.model.request.SigninRequest;
 import az.qonaqol.qonaqol.model.request.SignupRequest;
@@ -12,6 +14,7 @@ import az.qonaqol.qonaqol.service.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,16 +24,13 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthenticationServiceImpl implements AuthenticationService {
 
-    private final UserRepository repository;
-
-    private final PasswordEncoder encoder;
-
     private final JwtService jwtService;
-
+    private final PasswordEncoder encoder;
+    private final UserRepository repository;
     private final AuthenticationManager authManager;
 
     @Override
-    public JwtAuthenticationResponse signup(SignupRequest signupRequest) {
+    public AuthenticationDto signup(SignupRequest signupRequest) {
         //Register the user to repository and generate a token
 
         if (signupRequest.getPassword().equals(signupRequest.getConfirmPassword())) {
@@ -44,18 +44,19 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
             repository.save(user);
 
-            var jwtToken = jwtService.generateToken(user);
-            return JwtAuthenticationResponse.builder()
-                    .token(jwtToken)
+            return AuthenticationDto.builder()
+                    .userId(user.getId())
+                    .tokenPair(getTokenPair(user))
                     .build();
-        }else {
+
+        } else {
             throw new IllegalArgumentException("Passwords do not match");
         }
 
     }
 
     @Override
-    public JwtAuthenticationResponse signin(SigninRequest signinRequest) {
+    public AuthenticationDto signin(SigninRequest signinRequest) {
         authManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         signinRequest.getEmail(),
@@ -66,10 +67,25 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         var user = repository.findByEmail(signinRequest.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User not found with email " + signinRequest.getEmail()));
 
-        var jwtToken = jwtService.generateToken(user);
-        return JwtAuthenticationResponse.builder()
-                .token(jwtToken)
+        return AuthenticationDto.builder()
+                .userId(user.getId())
+                .tokenPair(getTokenPair(user))
                 .build();
+    }
+
+    @Override
+    public TokenPair refreshToken(UserDetails userDetails) {
+        var user = repository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UserNotFoundException("User not found with email " + userDetails.getUsername()));
+
+        return getTokenPair(user);
+    }
+
+    private TokenPair getTokenPair(UserDetails user) {
+        TokenPair tokenResponse = new TokenPair();
+        tokenResponse.setAccessToken(jwtService.generateToken(user, TokenType.ACCESS));
+        tokenResponse.setRefreshToken(jwtService.generateToken(user, TokenType.REFRESH));
+        return tokenResponse;
     }
 
 }

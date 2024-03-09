@@ -1,4 +1,4 @@
-package az.qonaqol.qonaqol.config;
+package az.qonaqol.qonaqol.security.jwt;
 
 import az.qonaqol.qonaqol.service.JwtService;
 import jakarta.servlet.FilterChain;

@@ -29,16 +29,14 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank
-    @Column(name = "fullName", length = 50)
+    @Column(name = "fullName", length = 50, nullable = false)
     private String fullName;
 
     @Email
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @NotBlank
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
@@ -47,6 +45,9 @@ public class UserEntity implements UserDetails {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<EventEntity> events;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<ReservationEntity> reservation;
 
     @Column(name = "created_date")
     private LocalDateTime createdDate;

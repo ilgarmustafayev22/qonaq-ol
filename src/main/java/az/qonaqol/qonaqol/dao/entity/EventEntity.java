@@ -8,7 +8,6 @@ import jakarta.validation.constraints.Pattern;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.time.*;
@@ -69,6 +68,9 @@ public class EventEntity {
     @JsonBackReference
     private UserEntity user;
 
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
+    private List<ReservationEntity> reservation;
+
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
@@ -76,6 +78,9 @@ public class EventEntity {
     @UpdateTimestamp
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    @Column(name = "main_photo_url")
+    private String mainPhotoUrl;
 
     @ElementCollection(fetch = FetchType.EAGER)
     @Column(name = "photo_urls")

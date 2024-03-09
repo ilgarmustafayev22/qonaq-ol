@@ -11,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class AwsS3Config {
-    public static final String ACCESS_KEY = "";
-    public static final String SECRET_KEY = "";
+
+    public static final String ACCESS_KEY = ;
+    public static final String SECRET_KEY = ;
 
     @Bean
     public AmazonS3 s3client() {
         BasicAWSCredentials awsCreds = new BasicAWSCredentials(ACCESS_KEY, SECRET_KEY);
-        var awsS3Config = AmazonS3ClientBuilder.standard()
+        return AmazonS3ClientBuilder.standard()
                 .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
                 .withRegion(Regions.EU_NORTH_1) // This field if not exist throws an exception
                 .build();
-        return awsS3Config;
     }
 
 }

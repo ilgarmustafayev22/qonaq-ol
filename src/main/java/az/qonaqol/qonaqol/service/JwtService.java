@@ -1,5 +1,6 @@
 package az.qonaqol.qonaqol.service;
 
+import az.qonaqol.qonaqol.model.enums.TokenType;
 import io.jsonwebtoken.Claims;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -16,10 +17,11 @@ public interface JwtService {
 
     String generateToken(
             Map<String, Object> extraClaims, //For any extra info
-            UserDetails userDetails
+            UserDetails userDetails,
+            TokenType tokenType
     );
 
-    String generateToken(UserDetails userDetails);
+    String generateToken(UserDetails userDetails, TokenType tokenType);
 
     boolean isTokenExpired(String token);
 

@@ -1,7 +1,5 @@
 package az.qonaqol.qonaqol.config;
 
-import io.swagger.v3.oas.annotations.enums.SecuritySchemeType;
-
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
@@ -13,7 +11,7 @@ import org.springframework.context.annotation.Configuration;
 import java.util.Collections;
 
 @Configuration
-public class OpenApiConfiguration {
+public class OpenApiConfig {
 
     @Bean
     public OpenAPI springShopOpenAPI() {

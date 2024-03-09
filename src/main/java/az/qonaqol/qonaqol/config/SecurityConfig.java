@@ -1,20 +1,23 @@
 package az.qonaqol.qonaqol.config;
 
-import az.qonaqol.qonaqol.service.UserService;
+import az.qonaqol.qonaqol.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+
+import java.util.Arrays;
+import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -29,9 +32,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .authorizeHttpRequests(authorization -> authorization
-                        .requestMatchers("/api/v1/secured").hasRole("ADMIN")
+                        .requestMatchers("/api/v1/secured").hasRole("USER")
+                        .requestMatchers("/api/v1/non-secured").permitAll()
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/gift-card/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/gift-card/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/gift-card/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/gift-card/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        .requestMatchers("/api/reservation/create-reservation-unregistered").permitAll()
+                        .requestMatchers("/api/reservation/create-reservation-registered").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/event/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/event/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.PUT, "/api/event/**").hasAnyRole("ADMIN", "USER")
@@ -43,6 +53,7 @@ public class SecurityConfig {
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(AbstractHttpConfigurer::disable)
                 .build();
     }
 

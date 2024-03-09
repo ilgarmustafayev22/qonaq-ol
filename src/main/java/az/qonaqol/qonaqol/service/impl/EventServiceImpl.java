@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -33,7 +34,16 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public Long createEvent(EventRequest eventRequest) {
+    public Long createEvent(EventRequest eventRequest, MultipartFile photo, MultipartFile[] photos) {
+        EventEntity eventEntity = eventMapper.toEntity(eventRequest);
+        eventRepository.save(eventEntity);
+        uploadPhotos(eventEntity.getId(), photo, photos);
+        return eventEntity.getId();
+    }
+
+    @Override
+    @Transactional
+    public Long createEventTest(EventRequest eventRequest) {
         EventEntity eventEntity = eventMapper.toEntity(eventRequest);
         eventRepository.save(eventEntity);
         return eventEntity.getId();
@@ -58,6 +68,23 @@ public class EventServiceImpl implements EventService {
         return eventRepository.findByCategory(category)
                 .map(eventMapper::toDto)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with category: " + category));
+    }
+
+    @Override
+    public List<EventDto> findByEventDateBetween(LocalDate startDate, LocalDate endDate) {
+        return eventRepository.findByEventDateBetween(startDate, endDate).stream()
+                .map(eventMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<EventDto> findByEventDateBetweenAndCategory(LocalDate startDate,
+                                                            LocalDate endDate,
+                                                            EventCategory category) {
+        return eventRepository.findByEventDateBetweenAndCategory(startDate, endDate, category)
+                .stream()
+                .map(eventMapper::toDto)
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -89,28 +116,30 @@ public class EventServiceImpl implements EventService {
 
     @Override
     @Transactional
-    public void uploadPhotos(long eventId, MultipartFile[] files) {
+    public void uploadPhotos(long eventId, MultipartFile mainPhoto, MultipartFile[] photos) {
         EventEntity event = eventRepository.findById(eventId)
                 .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
-        List<String> photoUrls = Arrays.stream(files)
-                .filter(file -> !file.isEmpty())
+        List<String> photoUrls = Arrays.stream(photos)
+                .filter(photo -> !photo.isEmpty())
                 .map(EventServiceImpl::apply)
                 .collect(Collectors.toList());
+        event.setMainPhotoUrl(apply(mainPhoto));
         event.setPhotoUrls(photoUrls);
         eventRepository.save(event);
-        fileUtil.uploadFiles(files);
+        fileUtil.uploadFile(mainPhoto);
+        fileUtil.uploadFiles(photos);
     }
 
-   //@Override
-   //public byte[] downloadPhoto(String photoName) {
-   //    return fileUtil.downloadFile(photoName);
-   //}
+    //@Override
+    //public byte[] downloadPhoto(String photoName) {
+    //    return fileUtil.downloadFile(photoName);
+    //}
 
-   //@Override
-   //public List<String> findPhotoNamesByEventId(long eventId) {
-   //    return eventRepository.findById(eventId)
-   //            .map(EventEntity::getPhotoUrls)
-   //            .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
-   //}
+    //@Override
+    //public List<String> findPhotoNamesByEventId(long eventId) {
+    //    return eventRepository.findById(eventId)
+    //            .map(EventEntity::getPhotoUrls)
+    //            .orElseThrow(() -> new EventNotFoundException("Event not found with id: " + eventId));
+    //}
 
 }
