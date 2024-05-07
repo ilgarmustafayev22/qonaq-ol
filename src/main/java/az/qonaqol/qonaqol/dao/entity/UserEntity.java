@@ -11,10 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @Getter
 @Setter
@@ -29,7 +26,7 @@ public class UserEntity implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "fullName", length = 50, nullable = false)
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Email
@@ -43,14 +40,27 @@ public class UserEntity implements UserDetails {
     @Column(name = "role")
     private UserRole role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<EventEntity> events;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<ReservationEntity> reservation;
-
     @Column(name = "created_date")
     private LocalDateTime createdDate;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<EventEntity> events;
+
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LikeEntity> likes;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_reservations",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "reservation_id")
+    )
+    private Set<ReservationEntity> reservations;
+
+    public void addReservation(ReservationEntity reservation) {
+        this.reservations.add(reservation);
+        reservation.getUsers().add(this);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

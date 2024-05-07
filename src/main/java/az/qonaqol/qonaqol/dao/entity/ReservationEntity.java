@@ -9,6 +9,8 @@ import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -23,32 +25,37 @@ public class ReservationEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "fullName", length = 50, nullable = false)
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Email
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
-    @Pattern(regexp = "^[0-9\\+-]*$")
-    @Column(name = "phone_number", length = 20, nullable = false)
+    @Column(name = "phone_number", nullable = false)
     private String phoneNumber;
 
-    @Column(name = "participants_count", length = 3, nullable = false)
+    @Column(name = "participants_count", nullable = false)
     private Integer participantsCount;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonBackReference
-    private UserEntity user;
-
-    @ManyToOne
-    @JoinColumn(name = "event_id", referencedColumnName = "id")
-    @JsonBackReference
-    private EventEntity event;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_id", referencedColumnName = "id")
+    @JsonBackReference
+    private EventEntity event;
+
+    @ManyToMany(mappedBy = "reservations", fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JsonBackReference
+    private Set<UserEntity> users;
+
+    public Set<UserEntity> getUsers() {
+        if (users == null) {
+            users = new HashSet<>();
+        }
+        return users;
+    }
 
 }

@@ -28,6 +28,9 @@ public class FileUtil {
     public static final String BUCKET_NAME = "qonaqol";
 
     public void uploadFile(MultipartFile file) {
+        if (file == null) {
+            throw new PhotoNotFoundException("No file to upload");
+        }
         ObjectMetadata metadata = new ObjectMetadata();
         metadata.setContentType(file.getContentType());
         metadata.setContentLength(file.getSize());
@@ -49,19 +52,23 @@ public class FileUtil {
             try (InputStream inputStream = file.getInputStream()) {
                 s3Client.putObject(BUCKET_NAME, file.getOriginalFilename(), inputStream, metadata);
             } catch (IOException e) {
-                log.error("Error occurred while uploading file to S3", e);
+                log.error("Error occurred while uploading files to S3", e);
             }
         }
     }
 
-   // public byte[] downloadFile(String fileName) {
-   //     S3Object s3Object = s3Client.getObject(BUCKET_NAME, fileName);
-   //     try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
-   //         return IOUtils.toByteArray(inputStream);
-   //     } catch (IOException e) {
-   //         throw new PhotoNotFoundException("Photo not found on S3: " + fileName);
-   //     }
-   // }
+    public void deleteFile(String fileName){
+        s3Client.deleteObject(BUCKET_NAME,fileName);
+    }
+
+    // public byte[] downloadFile(String fileName) {
+    //     S3Object s3Object = s3Client.getObject(BUCKET_NAME, fileName);
+    //     try (S3ObjectInputStream inputStream = s3Object.getObjectContent()) {
+    //         return IOUtils.toByteArray(inputStream);
+    //     } catch (IOException e) {
+    //         throw new PhotoNotFoundException("Photo not found on S3: " + fileName);
+    //     }
+    // }
 
 }
 

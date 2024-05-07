@@ -1,0 +1,39 @@
+databaseChangeLog:
+  - changeSet:
+      id: 004_create-event-likes-table
+      author: Ilgar Mustafayev
+      changes:
+        - createTable:
+            tableName: event_likes
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+              - column:
+                  name: event_id
+                  type: BIGINT
+
+        - addForeignKeyConstraint:
+            baseTableName: event_likes
+            baseColumnNames: event_id
+            referencedTableName: events
+            referencedColumnNames: id
+            constraintName: fk_event_likes_event
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+
+        - addForeignKeyConstraint:
+            baseTableName: event_likes
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_event_likes_user
+            onDelete: CASCADE
+            onUpdate: RESTRICT

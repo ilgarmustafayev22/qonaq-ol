@@ -17,6 +17,8 @@ import java.util.List;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class EventDto {
 
+    Long id;
+    Long userId;
     String eventName;
     String description;
     EventCategory category;
@@ -27,8 +29,8 @@ public class EventDto {
     String eventEndTime;
     String eventLocation;
     String contact;
-    Integer maxParticipants;
     String mainPhotoUrl;
+    Long viewCount;
     List<String> photoUrls;
 
 }

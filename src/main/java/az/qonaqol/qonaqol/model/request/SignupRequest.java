@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 public class SignupRequest {
 
     @NotBlank
-    @Size(max = 40)
+    @Size(max = 50)
     private String fullName;
 
     @Email
@@ -23,11 +23,11 @@ public class SignupRequest {
     private String email;
 
     @NotBlank
-    @Size(max = 10)
+    @Size(max = 10, min = 8)
     private String password;
 
     @NotBlank
-    @Size(max = 10)
+    @Size(max = 10, min = 8)
     private String confirmPassword;
 
     @Override

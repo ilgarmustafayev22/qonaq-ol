@@ -31,29 +31,37 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
+                .cors(AbstractHttpConfigurer::disable)
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session
+                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorization -> authorization
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+                        .requestMatchers("/api/gift-card-order/**").permitAll()
+                        .requestMatchers("/api/event-view-count/**").permitAll()
                         .requestMatchers("/api/v1/secured").hasRole("USER")
                         .requestMatchers("/api/v1/non-secured").permitAll()
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.POST, "/api/gift-card/**").hasRole("ADMIN")
+                        .requestMatchers("/api/like-event/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/gift-card/**").permitAll()
                         .requestMatchers(HttpMethod.PUT, "/api/gift-card/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/gift-card/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/gift-card/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/v1/auth/**").permitAll()
+                        //.requestMatchers("/api/reservation/{userId}").permitAll()
+                        .requestMatchers("/api/reservation/**").permitAll()
+                        .requestMatchers("/api/reservation/user/{id}").permitAll()
                         .requestMatchers("/api/reservation/create-reservation-unregistered").permitAll()
-                        .requestMatchers("/api/reservation/create-reservation-registered").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers("/api/reservation/create-reservation-registered").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/event/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/event/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.PUT, "/api/event/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers(HttpMethod.DELETE, "/api/event/**").hasAnyRole("ADMIN", "USER")
-                        .requestMatchers("/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll()
-                        .anyRequest().authenticated())
-                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+                        .requestMatchers(HttpMethod.POST, "/api/event/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/api/event/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/api/event/**").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll())
+                .authorizeHttpRequests(auth ->
+                        auth.anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable)
-                .cors(AbstractHttpConfigurer::disable)
+                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
     }
 

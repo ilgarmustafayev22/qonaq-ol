@@ -35,14 +35,14 @@ public class EventController {
             @ApiResponse(responseCode = "500", description = "Internal server error")
     })
     @PostMapping(path = "/create-event", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<Long> createEvent(@RequestPart("mainPhoto") MultipartFile file,
-                                            @RequestPart("photos") MultipartFile[] files,
+    public ResponseEntity<Long> createEvent(@RequestBody MultipartFile file,
+                                            @RequestBody MultipartFile[] files,
                                             EventRequest eventRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventRequest, file, files));
     }
 
-    @PostMapping( "/create-event-test")
-    public ResponseEntity<Long> createEventTest(EventRequest eventRequest) {
+    @PostMapping("/create-event-test")
+    public ResponseEntity<Long> createEventTest(@RequestBody EventRequest eventRequest) {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEventTest(eventRequest));
     }
 
@@ -57,13 +57,18 @@ public class EventController {
         return ResponseEntity.ok(eventService.findById(eventId));
     }
 
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<EventDto>> findByUserId(@Valid @PathVariable long userId) {
+        return ResponseEntity.ok(eventService.findByUserId(userId));
+    }
+
     @GetMapping("/all-events")
     public ResponseEntity<List<EventDto>> findAllEvents() {
         return ResponseEntity.ok(eventService.findAllEvents());
     }
 
     @GetMapping("/category/{category}")
-    public ResponseEntity<EventDto> findByCategory(@Valid @PathVariable EventCategory category) {
+    public ResponseEntity<List<EventDto>> findByCategory(@Valid @PathVariable EventCategory category) {
         return ResponseEntity.ok(eventService.findByCategory(category));
     }
 
@@ -80,16 +85,33 @@ public class EventController {
         return ResponseEntity.ok(eventService.findByEventDateBetweenAndCategory(startDate, endDate, category));
     }
 
-    @PutMapping("/{eventId}")
+    @PutMapping(path = "/{eventId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<Long> updateEvent(@PathVariable long eventId,
-                                            @RequestBody EventRequest eventRequest) {
-        return ResponseEntity.ok(eventService.updateEvent(eventId, eventRequest));
+                                            @RequestBody MultipartFile file,
+                                            @RequestBody MultipartFile[] files,
+                                            EventRequest eventRequest) {
+        return ResponseEntity.ok(eventService.updateEvent(eventId, eventRequest, file, files));
     }
 
     @DeleteMapping("/{eventId}")
     public ResponseEntity<Void> deleteEvent(@Valid @PathVariable long eventId) {
         eventService.deleteEvent(eventId);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/view-count/{eventId}")
+    public ResponseEntity<Long> getViewCount(@Valid @PathVariable long eventId) {
+        return ResponseEntity.ok(eventService.getViewCount(eventId));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<EventDto>> searchAll(@RequestParam("keyword") String keyword) {
+        return ResponseEntity.ok(eventService.searchAll(keyword));
+    }
+
+    @GetMapping("/liked-events/{userId}")
+    public ResponseEntity<List<EventDto>> findLikedEventsByUserId(@PathVariable long userId) {
+        return ResponseEntity.ok(eventService.findLikedEventsByUserId(userId));
     }
 
     // @GetMapping("/photosNames/{eventId}")

@@ -20,6 +20,12 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+//@NamedEntityGraph(name = "Event.detail",
+//        attributeNodes = {
+//                @NamedAttributeNode("user"),
+//                @NamedAttributeNode("reservation"),
+//                @NamedAttributeNode("likes")
+//        })
 @Table(name = "events")
 public class EventEntity {
 
@@ -27,10 +33,10 @@ public class EventEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "event_name", length = 50, nullable = false)
+    @Column(name = "event_name", nullable = false)
     private String eventName;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", length = 1000, nullable = false)
     private String description;
 
     @Enumerated(EnumType.STRING)
@@ -53,23 +59,11 @@ public class EventEntity {
     @Column(name = "event_end_time", nullable = false)
     private String eventEndTime;
 
-    @Column(name = "event_location", length = 50, nullable = false)
+    @Column(name = "event_location", nullable = false)
     private String eventLocation;
 
-    @Pattern(regexp = "^[0-9\\+-]*$", message = "Contact information can only contain numbers, +, and -")
-    @Column(name = "contact", length = 20, nullable = false)
+    @Column(name = "contact", nullable = false)
     private String contact;
-
-    @Column(name = "max_participants", length = 3, nullable = false)
-    private Integer maxParticipants;
-
-    @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id")
-    @JsonBackReference
-    private UserEntity user;
-
-    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL)
-    private List<ReservationEntity> reservation;
 
     @CreationTimestamp
     @Column(name = "created_at", updatable = false)
@@ -82,8 +76,23 @@ public class EventEntity {
     @Column(name = "main_photo_url")
     private String mainPhotoUrl;
 
-    @ElementCollection(fetch = FetchType.EAGER)
-    @Column(name = "photo_urls")
-    private List<String> photoUrls = new ArrayList<>(5);
+    @Column(name = "view_count")
+    private Long viewCount;
 
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "event_photo_urls", joinColumns = @JoinColumn(name = "event_id"))
+    @Column(name = "photo_urls")
+    private List<String> photoUrls;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    @JsonBackReference
+    private UserEntity user;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ReservationEntity> reservation;
+
+    @OneToMany(mappedBy = "event", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LikeEntity> likes;
+    
 }

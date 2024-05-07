@@ -1,6 +1,7 @@
 package az.qonaqol.qonaqol.mapper;
 
 import az.qonaqol.qonaqol.dao.entity.EventEntity;
+import az.qonaqol.qonaqol.model.dto.EventDetailsDTO;
 import az.qonaqol.qonaqol.model.dto.EventDto;
 import az.qonaqol.qonaqol.model.enums.EventCategory;
 import az.qonaqol.qonaqol.model.enums.EventLanguage;
@@ -24,8 +25,10 @@ public interface EventMapper {
     @Mapping(source = "userId", target = "user.id")
     EventEntity toEntity(EventRequest request);
 
-    EventDto toDto(EventEntity entity);
 
-    List<EventDto> toDtoList(List<EventEntity> entityList);
+    EventEntity toEntity(EventDetailsDTO eventDetailsDTO);
+
+    @Mapping(source = "user.id", target = "userId")
+    EventDto toDto(EventEntity entity);
 
 }

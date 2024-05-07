@@ -1,0 +1,68 @@
+databaseChangeLog:
+  - changeSet:
+      id: 008_gift-card-orders-table
+      author: Ilgar Mustafayev
+      changes:
+        - createTable:
+            tableName: gift_card_orders
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: sender_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: sender_phone_number
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: receiver_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: receiver_phone_number
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: message
+                  type: VARCHAR(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: is_completed
+                  type: BOOLEAN
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP(6)
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: gift_card_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: gift_card_orders
+            baseColumnNames: gift_card_id
+            referencedTableName: gift_cards
+            referencedColumnNames: id
+            constraintName: fk_photo_urls_event
+            onDelete: CASCADE
+            onUpdate: RESTRICT

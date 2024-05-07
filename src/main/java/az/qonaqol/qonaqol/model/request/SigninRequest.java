@@ -1,6 +1,7 @@
 package az.qonaqol.qonaqol.model.request;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ public class SigninRequest {
     private String email;
 
     @NotBlank
+    @Size(max = 10, min = 8)
     private String password;
 
     @Override

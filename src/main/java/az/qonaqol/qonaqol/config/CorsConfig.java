@@ -21,15 +21,16 @@ import java.util.Collections;
 
 @Configuration
 @EnableWebMvc
-public class CorsConfig  implements WebMvcConfigurer {
+public class CorsConfig implements WebMvcConfigurer {
 
-   @Override
-   public void addCorsMappings(CorsRegistry registry) {
-       registry.addMapping("/**")
-               .allowedOrigins("*")
-               .allowedMethods("*")
-               .allowedHeaders("*")
-               .maxAge(3600);
-   }
+    @Override
+    public void addCorsMappings(CorsRegistry registry) {
+        registry.addMapping("/**")
+                .allowedOrigins("*")
+                .allowedMethods("*")
+                .allowedHeaders("*")
+                .allowCredentials(false)
+                .maxAge(3600);
+    }
 
 }

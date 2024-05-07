@@ -14,14 +14,13 @@ public class MailServiceImpl implements MailService {
 
     @Value("${spring.mail.username}")
     private String fromMail;
-
     private final JavaMailSender mailSender;
 
     @Override
     @Transactional
     public void sendMail(String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(fromMail); // Adjust this if needed
+        message.setFrom(fromMail);
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);

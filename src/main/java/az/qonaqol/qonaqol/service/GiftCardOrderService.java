@@ -10,7 +10,7 @@ public interface GiftCardOrderService {
 
    List<GiftCardOrderDto> getGiftCardOrders();
 
-   GiftCardOrderDto getGiftCardOrderById(Long id);
+   GiftCardOrderDto findGiftCardOrderById(Long id);
 
    void updateGiftCardOrder(Long id, GiftCardOrderDto giftCardOrderDto);
 

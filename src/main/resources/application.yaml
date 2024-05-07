@@ -4,14 +4,14 @@ server:
     context-path: /qonaqol
 
 spring:
-  mvc:
-    pathmatch:
-      matching-strategy: ant_path_matcher
+  application:
+    liquibase:
+      change-log: classpath:db/changelog/db.changelog-master.yaml
   datasource:
     type: com.zaxxer.hikari.HikariDataSource
-    url: jdbc:postgresql://${HOST:dpg-cnavkhicn0vc73927efg-a.oregon-postgres.render.com}:5432/${POSTGRES_DB:qonaqol}
-    username: ${DB_USERNAME:ilqar}
-    password: ${DB_PASSWORD:YI09u9Z2NMQhEAqTMFR0oU0WuDBhcWc0}
+    url: jdbc:postgresql://${HOST:localhost}:5432/${POSTGRES_DB:qonaqol}
+    username: ${DB_USERNAME:postgres}
+    password: ${DB_PASSWORD:mysecretpassword}
     driver-class-name: org.postgresql.Driver
 
   jpa:
@@ -19,11 +19,12 @@ spring:
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+
   mail:
     host: smtp.gmail.com  # Your SMTP server host
     port: 587             # SMTP port (587 for TLS, 465 for SSL)
@@ -35,11 +36,12 @@ spring:
           auth: true
           starttls:
             enable: true
+
   servlet:
     multipart:
       enabled: true
-      max-file-size: 8MB
-      max-request-size: 8MB
+      max-file-size: 4MB
+      max-request-size: 20MB
 
 logging:
   level:
@@ -50,11 +52,6 @@ springdoc:
     path: /v3/api-docs
   swagger-ui:
     path: /swagger-ui
-  securitySchemes:
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
 
 application:
   security:
