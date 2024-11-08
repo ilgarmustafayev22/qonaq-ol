@@ -35,5 +35,5 @@ The platform is containerized with **Docker** and deployed to the cloud, ensurin
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/qonaq-ol.git
+   git clone https://github.com/ilgarmustafayev22/qonaq-ol.git
    cd qonaq-ol
