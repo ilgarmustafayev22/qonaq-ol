@@ -1,8 +1,8 @@
-# Event Booking, Experience Marketplace, and Gift Card Platform
+# Qonaq-ol: Event Booking, Experience Marketplace, and Gift Card Platform
 
-This project is a web platform for booking events, discovering unique experiences,
-and purchasing gift cards. It is built with **Spring Boot** and designed for **scalability** and **security**.
-The platform is containerized with **Docker** and deployed to the cloud, ensuring consistent environments and ease of scaling.
+**Qonaq-ol** is a start-up project MVP designed as a platform for booking events, discovering unique experiences, and purchasing gift cards. 
+It is built with **Spring Boot** and designed for **scalability** and **security**. The platform is containerized with **Docker** and deployed 
+to the cloud, ensuring consistent environments and ease of scaling.
 
 ## Key Features
 
