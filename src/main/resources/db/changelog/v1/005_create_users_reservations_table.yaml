@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: 005_create-users-reservations-table
+      author: Ilgar Mustafayev
+      changes:
+        - createTable:
+            tableName: users_reservations
+            columns:
+              - column:
+                  name: users_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_users_reservations_users
+                    references: users(id)
+              - column:
+                  name: reservation_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_users_reservations_reservations
+                    references: reservations(id)

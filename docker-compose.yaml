@@ -1,0 +1,28 @@
+version: '3.8'
+
+services:
+
+  postgres2:
+    image: postgres:latest
+    container_name: postgres2
+    environment:
+      - POSTGRES_DB=qonaqol
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgres/data
+
+  qonaq-ol:
+    image: ilgarmustafayev22/qonaqol:v1
+    container_name: qonaq-ol
+    environment:
+      - HOST=postgres2
+    ports:
+      - "8081:8081"
+    depends_on:
+      - postgres2
+
+volumes:
+  db:

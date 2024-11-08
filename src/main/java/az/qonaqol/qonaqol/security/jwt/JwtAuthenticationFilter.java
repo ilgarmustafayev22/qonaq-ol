@@ -1,4 +1,4 @@
-package az.qonaqol.qonaqol.config;
+package az.qonaqol.qonaqol.security.jwt;
 
 import az.qonaqol.qonaqol.service.JwtService;
 import jakarta.servlet.FilterChain;
@@ -46,7 +46,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             log.debug("User details retrieved: {}", userDetails);
-
 
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 //UsernamePasswordAuthenticationToken is a container that is used to carry information about a user during the login process

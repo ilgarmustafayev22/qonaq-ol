@@ -1,0 +1,101 @@
+databaseChangeLog:
+  - changeSet:
+      id: 001_create-events-table
+      author: Ilgar Mustafayev
+      changes:
+        - createTable:
+            tableName: events
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: event_name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(1000)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: category
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: language
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_price
+                  type: DECIMAL(10,2)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_date
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_start_time
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_end_time
+                  type: VARCHAR(50)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: event_location
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: contact
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created_at
+                  type: TIMESTAMP(6)
+                  defaultValueComputed: now()
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP(6)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: main_photo_url
+                  type: VARCHAR(255)
+              - column:
+                  name: view_count
+                  type: BIGINT
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: addForeignKeyConstraint-events-table
+      author: Ilgar Mustafayev
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: events
+            baseColumnNames: user_id
+            referencedTableName: users
+            referencedColumnNames: id
+            constraintName: fk_event_user
+            onDelete: CASCADE
+            onUpdate: RESTRICT
+
+
+

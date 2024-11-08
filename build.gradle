@@ -11,32 +11,49 @@ java {
     sourceCompatibility = '17'
 }
 
+
+
 repositories {
     mavenCentral()
 }
 
 dependencies {
+
+    implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
+
     //implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
     implementation 'org.springframework.boot:spring-boot-starter-security'
     implementation group: 'io.jsonwebtoken', name: 'jjwt-api', version: '0.12.4'
+    implementation 'org.jetbrains:annotations:24.0.0'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-impl', version: '0.12.4'
     runtimeOnly group: 'io.jsonwebtoken', name: 'jjwt-jackson', version: '0.12.4'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-web'
+
     compileOnly 'org.projectlombok:lombok'
-    developmentOnly 'org.springframework.boot:spring-boot-devtools'
     runtimeOnly 'org.postgresql:postgresql'
-    annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
     annotationProcessor 'org.projectlombok:lombok'
     implementation 'org.mapstruct:mapstruct:1.5.5.Final'
     annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
+    implementation 'org.liquibase:liquibase-core'
+
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
+    implementation group: 'com.amazonaws', name: 'aws-java-sdk-s3', version: '1.12.663'
+    implementation 'javax.xml.bind:jaxb-api:2.3.0'
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.springframework.security:spring-security-test'
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0'
-    implementation("io.minio:minio:8.5.8")
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.7.2'
+    testImplementation 'org.mockito:mockito-core:3.12.4'
+    testImplementation 'org.assertj:assertj-core:3.8.0'
+
 }
 
 tasks.named('test') {
     useJUnitPlatform()
 }
+

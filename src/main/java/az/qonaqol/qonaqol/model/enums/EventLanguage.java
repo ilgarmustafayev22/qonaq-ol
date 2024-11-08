@@ -1,13 +1,15 @@
 package az.qonaqol.qonaqol.model.enums;
 
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 
+@Getter
 @RequiredArgsConstructor
 public enum EventLanguage {
 
-    AZERBAIJANI("Azərbaycan dili"),
+    AZERBAIJANI("Azərbaycan"),
     ENGLISH("English"),
-    RUSSIAN("Русский язык");
+    RUSSIAN("Русский");
 
     private final String value;
 

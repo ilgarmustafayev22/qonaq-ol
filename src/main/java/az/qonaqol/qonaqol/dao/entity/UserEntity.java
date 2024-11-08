@@ -4,52 +4,59 @@ package az.qonaqol.qonaqol.dao.entity;
 import az.qonaqol.qonaqol.model.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class UserEntity implements UserDetails {
+@ToString(callSuper = true, exclude = {"password"})
+public class UserEntity extends BaseEntity implements UserDetails {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @NotBlank
-    @Column(name = "fullName", length = 50)
+    @Column(name = "full_name", nullable = false)
     private String fullName;
 
     @Email
-    @Column(name = "email", unique = true)
+    @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @NotBlank
-    @Column(name = "password")
+    @Column(name = "password", nullable = false)
     private String password;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRole role;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EventEntity> events;
 
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LikeEntity> likes;
+
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinTable(
+            name = "users_reservations",
+            joinColumns = @JoinColumn(name = "users_id"),
+            inverseJoinColumns = @JoinColumn(name = "reservation_id")
+    )
+    private Set<ReservationEntity> reservations;
+
+    public void addReservation(ReservationEntity reservation) {
+        this.reservations.add(reservation);
+        reservation.getUsers().add(this);
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -92,17 +99,6 @@ public class UserEntity implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), email);
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder("User{")
-                .append("id=").append(getId())
-                .append(", fullName='").append(fullName).append('\'')
-                .append(", email='").append(email).append('\'')
-                .append(", role=").append(role)
-                .append('}')
-                .toString();
     }
 
 }
