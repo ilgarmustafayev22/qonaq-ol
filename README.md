@@ -12,7 +12,6 @@ The platform is containerized with **Docker** and deployed to the cloud, ensurin
 - **Efficient File Storage**: Integrated with **Amazon S3** for storing images and other files.
 - **Containerized Deployment**: Dockerized application for consistent and scalable deployment.
 - **Agile Development**: Developed in an Agile environment, with frequent sprints and daily stand-ups.
-- **Continuous Integration and Deployment**: Managed CI/CD pipelines for seamless updates.
 
 ## Tech Stack
 
@@ -27,9 +26,9 @@ The platform is containerized with **Docker** and deployed to the cloud, ensurin
 
 ### Prerequisites
 
-- **Java** (version X)
+- **Java** (version 17)
 - **Docker**
-- **Gradle** (or Maven, if specified)
+- **Gradle**
 - **Git**
 
 ### Installation
