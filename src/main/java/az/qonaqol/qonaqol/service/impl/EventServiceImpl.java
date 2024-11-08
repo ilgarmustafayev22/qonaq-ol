@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class EventServiceImpl implements EventService {
-    public static final String PHOTO_URL = "https://qonaqol.s3.eu-north-1.amazonaws.com/";
+    private static final String PHOTO_URL = "https://qonaqol.s3.eu-north-1.amazonaws.com/";
     private final FileUtil fileUtil;
     private final EventMapper eventMapper;
     private final EventRepository eventRepository;
@@ -42,26 +42,6 @@ public class EventServiceImpl implements EventService {
         eventEntity.setViewCount(0L);
         EventEntity event = eventRepository.save(eventEntity);
         uploadPhotos(event, photo, photos);
-        return eventEntity.getId();
-    }
-
-    @Override
-    @Transactional
-    public Long createEventTest(EventRequest eventRequest) {
-        EventEntity eventEntity = EventEntity.builder()
-                .eventName(eventRequest.getEventName())
-                .description(eventRequest.getDescription())
-                .category(eventRequest.getCategory())
-                .language(eventRequest.getLanguage())
-                .eventPrice(eventRequest.getEventPrice())
-                .eventDate(eventRequest.getEventDate())
-                .eventStartTime(eventRequest.getEventStartTime())
-                .eventEndTime(eventRequest.getEventEndTime())
-                .eventLocation(eventRequest.getEventLocation())
-                .contact(eventRequest.getContact())
-                .createdAt(LocalDateTime.now())
-                .build();
-        eventRepository.save(eventEntity);
         return eventEntity.getId();
     }
 

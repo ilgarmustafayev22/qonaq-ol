@@ -4,27 +4,26 @@ package az.qonaqol.qonaqol.dao.entity;
 import az.qonaqol.qonaqol.model.enums.UserRole;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 @Getter
 @Setter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
 @Table(name = "users")
-public class UserEntity implements UserDetails {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@ToString(callSuper = true, exclude = {"password"})
+public class UserEntity extends BaseEntity implements UserDetails {
 
     @Column(name = "full_name", nullable = false)
     private String fullName;
@@ -39,9 +38,6 @@ public class UserEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     @Column(name = "role")
     private UserRole role;
-
-    @Column(name = "created_date")
-    private LocalDateTime createdDate;
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<EventEntity> events;
@@ -103,17 +99,6 @@ public class UserEntity implements UserDetails {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), email);
-    }
-
-    @Override
-    public String toString() {
-        return new StringBuilder("User{")
-                .append("id=").append(getId())
-                .append(", fullName='").append(fullName).append('\'')
-                .append(", email='").append(email).append('\'')
-                .append(", role=").append(role)
-                .append('}')
-                .toString();
     }
 
 }

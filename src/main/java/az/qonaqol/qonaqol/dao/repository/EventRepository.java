@@ -11,12 +11,11 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 public interface EventRepository extends JpaRepository<EventEntity, Long> {
 
-    @Query("SELECT e FROM EventEntity e JOIN FETCH e.photoUrls WHERE e.createdAt <= CURRENT_DATE ORDER BY e.createdAt DESC")
+    @Query("SELECT e FROM EventEntity e JOIN FETCH e.photoUrls ORDER BY e.createdAt DESC")
     List<EventEntity> findAllWithPhotoUrls();
 
     @Query("SELECT e FROM EventEntity e JOIN FETCH e.photoUrls WHERE e.category = :category")

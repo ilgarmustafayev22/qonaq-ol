@@ -41,17 +41,6 @@ public class EventController {
         return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEvent(eventRequest, file, files));
     }
 
-    @PostMapping("/create-event-test")
-    public ResponseEntity<Long> createEventTest(@RequestBody EventRequest eventRequest) {
-        return ResponseEntity.status(HttpStatus.CREATED).body(eventService.createEventTest(eventRequest));
-    }
-
-    // @PostMapping(path = "/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    // public ResponseEntity<Void> uploadPhotos(@RequestBody MultipartFile[] files, @RequestParam("eventId") long eventId) {
-    //     eventService.uploadPhotos(eventId, files);
-    //     return ResponseEntity.ok().build();
-    // }
-
     @GetMapping("/{eventId}")
     public ResponseEntity<EventDto> findById(@Valid @PathVariable long eventId) {
         return ResponseEntity.ok(eventService.findById(eventId));
@@ -137,6 +126,12 @@ public class EventController {
     //             .header("Content-type", "application/octet-stream")
     //             .header("Content-disposition", "attachment; filename=\"" + fileName + "\"")
     //             .body(resource);
+    // }
+
+    // @PostMapping(path = "/upload-photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    // public ResponseEntity<Void> uploadPhotos(@RequestBody MultipartFile[] files, @RequestParam("eventId") long eventId) {
+    //     eventService.uploadPhotos(eventId, files);
+    //     return ResponseEntity.ok().build();
     // }
 
 }

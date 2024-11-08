@@ -47,7 +47,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
             log.debug("User details retrieved: {}", userDetails);
 
-
             if (jwtService.isTokenValid(jwtToken, userDetails)) {
                 //UsernamePasswordAuthenticationToken is a container that is used to carry information about a user during the login process
                 UsernamePasswordAuthenticationToken authToken =

@@ -13,8 +13,6 @@ public interface EventService {
 
     Long createEvent(EventRequest eventRequest, MultipartFile mainPhoto, MultipartFile[] photos);
 
-    Long createEventTest(EventRequest eventRequest);
-
     EventDto findById(long eventId);
 
     List<EventDto> findByUserId(long userId);

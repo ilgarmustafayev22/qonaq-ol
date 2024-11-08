@@ -3,24 +3,19 @@ package az.qonaqol.qonaqol.dao.entity;
 import az.qonaqol.qonaqol.model.enums.GiftCardType;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 @Table(name = "gift_cards")
-public class GiftCardEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class GiftCardEntity extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "gift_card_type", nullable = false)
@@ -28,14 +23,6 @@ public class GiftCardEntity {
 
     @Column(name = "usage_instructions", nullable = false)
     private String usageInstructions;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @OneToMany(mappedBy = "giftCard", cascade = CascadeType.ALL)
     private List<GiftCardOrderEntity> giftCardOrder;

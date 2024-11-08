@@ -17,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -48,6 +49,7 @@ class AuthenticationServiceImplTest {
 
     // We omit @Mock for authManager since you're likely already providing it elsewhere in your config
 
+    @Spy
     @InjectMocks
     private AuthenticationServiceImpl authService;
 

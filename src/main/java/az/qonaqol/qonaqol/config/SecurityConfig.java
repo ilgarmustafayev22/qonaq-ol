@@ -12,12 +12,6 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-
-import java.util.Arrays;
-import java.util.Collections;
 
 @Configuration
 @EnableWebSecurity
@@ -39,30 +33,28 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers("/api/gift-card-order/**").permitAll()
                         .requestMatchers("/api/event-view-count/**").permitAll()
-                        .requestMatchers("/api/v1/secured").hasRole("USER")
-                        .requestMatchers("/api/v1/non-secured").permitAll()
                         .requestMatchers("/api/v1/users/**").hasRole("ADMIN")
                         .requestMatchers("/api/like-event/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/gift-card/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/gift-card/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/gift-card/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/gift-card/**").hasRole("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/gift-card/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/api/v1/auth/**").permitAll()
-                        //.requestMatchers("/api/reservation/{userId}").permitAll()
                         .requestMatchers("/api/reservation/**").permitAll()
                         .requestMatchers("/api/reservation/user/{id}").permitAll()
                         .requestMatchers("/api/reservation/create-reservation-unregistered").permitAll()
-                        .requestMatchers("/api/reservation/create-reservation-registered").permitAll()
+                        .requestMatchers("/api/reservation/create-reservation-registered").hasAnyRole("ADMIN", "USER")
                         .requestMatchers(HttpMethod.GET, "/api/event/**").permitAll()
-                        .requestMatchers(HttpMethod.POST, "/api/event/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT, "/api/event/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/event/**").permitAll()
+                        .requestMatchers(HttpMethod.POST, "/api/event/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.PUT, "/api/event/**").hasAnyRole("ADMIN", "USER")
+                        .requestMatchers(HttpMethod.DELETE, "/api/event/**").hasAnyRole("ADMIN", "USER")
                         .requestMatchers("/v3/api-docs/**", "/swagger-resources/**", "/swagger-ui/**").permitAll())
                 .authorizeHttpRequests(auth ->
                         auth.anyRequest().authenticated())
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();
+
     }
 
 }

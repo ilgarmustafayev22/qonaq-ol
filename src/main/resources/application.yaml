@@ -2,6 +2,7 @@ server:
   port: 8081
   servlet:
     context-path: /qonaqol
+  forward-headers-strategy: framework
 
 spring:
   application:
@@ -26,10 +27,10 @@ spring:
         format_sql: true
 
   mail:
-    host: smtp.gmail.com  # Your SMTP server host
-    port: 587             # SMTP port (587 for TLS, 465 for SSL)
-    username: your_email@gmail.com
-    password: your_email_password
+    host: smtp.gmail.com
+    port: 587
+    username: qonaqolaz.info@gmail.com
+    password: efvc sted clby byuu
     properties:
       mail:
         smtp:
@@ -41,7 +42,7 @@ spring:
     multipart:
       enabled: true
       max-file-size: 4MB
-      max-request-size: 20MB
+      max-request-size: 25MB
 
 logging:
   level:

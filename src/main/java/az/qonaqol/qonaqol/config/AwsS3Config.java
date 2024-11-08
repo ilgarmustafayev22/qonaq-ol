@@ -12,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AwsS3Config {
 
-    public static final String ACCESS_KEY = "";
-    public static final String SECRET_KEY = "";
+    private static final String ACCESS_KEY = "";
+    private static final String SECRET_KEY = "";
 
     @Bean
     public AmazonS3 s3client() {

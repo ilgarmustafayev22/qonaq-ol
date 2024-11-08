@@ -25,7 +25,7 @@ import java.util.Optional;
 public class FileUtil {
 
     private final AmazonS3 s3Client;
-    public static final String BUCKET_NAME = "qonaqol";
+    private static final String BUCKET_NAME = "qonaqol";
 
     public void uploadFile(MultipartFile file) {
         if (file == null) {

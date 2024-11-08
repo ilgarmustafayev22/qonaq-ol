@@ -4,22 +4,20 @@ import az.qonaqol.qonaqol.model.enums.EventCategory;
 import az.qonaqol.qonaqol.model.enums.EventLanguage;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Pattern;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
+import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
-import java.time.*;
-import java.util.ArrayList;
+import java.time.LocalDate;
 import java.util.List;
 
 @Getter
 @Setter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 //@NamedEntityGraph(name = "Event.detail",
 //        attributeNodes = {
 //                @NamedAttributeNode("user"),
@@ -27,11 +25,8 @@ import java.util.List;
 //                @NamedAttributeNode("likes")
 //        })
 @Table(name = "events")
-public class EventEntity {
+public class EventEntity extends  BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
 
     @Column(name = "event_name", nullable = false)
     private String eventName;
@@ -64,14 +59,6 @@ public class EventEntity {
 
     @Column(name = "contact", nullable = false)
     private String contact;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @Column(name = "main_photo_url")
     private String mainPhotoUrl;

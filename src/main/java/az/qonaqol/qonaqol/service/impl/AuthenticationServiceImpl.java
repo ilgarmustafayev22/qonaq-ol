@@ -15,6 +15,7 @@ import az.qonaqol.qonaqol.service.JwtService;
 import az.qonaqol.qonaqol.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -28,44 +29,44 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     private final JwtService jwtService;
     private final PasswordEncoder encoder;
-    private final UserRepository repository;
     private final UserService userService;
+    private final UserRepository repository;
     private final AuthenticationManager authManager;
 
     @Override
     public AuthenticationDto signup(SignupRequest signupRequest) {
         //Register the user to repository and generate a token
         if (userService.existsByEmail(signupRequest.getEmail()))
-            throw new UsernameAlreadyExistsException( "User with email " + signupRequest.getEmail() + " already exists");
-        if (signupRequest.getPassword().equals(signupRequest.getConfirmPassword())) {
-            var user = UserEntity.builder()
-                    .fullName(signupRequest.getFullName())
-                    .email(signupRequest.getEmail())
-                    .password(encoder.encode(signupRequest.getPassword()))
-                    .role(UserRole.USER)
-                    .createdDate(LocalDateTime.now())
-                    .build();
+            throw new UsernameAlreadyExistsException("User with email " + signupRequest.getEmail() + " already exists");
 
-            repository.save(user);
-
-            return AuthenticationDto.builder()
-                    .userId(user.getId())
-                    .tokenPair(getTokenPair(user))
-                    .build();
-        } else {
+        if (signupRequest.getPassword().equals(signupRequest.getConfirmPassword()))
             throw new IllegalArgumentException("Passwords do not match");
-        }
 
+        var user = UserEntity.builder()
+                .fullName(signupRequest.getFullName())
+                .email(signupRequest.getEmail())
+                .password(encoder.encode(signupRequest.getPassword()))
+                .role(UserRole.USER)
+                .build();
+
+        repository.save(user);
+
+        return AuthenticationDto.builder()
+                .userId(user.getId())
+                .tokenPair(getTokenPair(user))
+                .build();
     }
 
     @Override
     public AuthenticationDto signin(SigninRequest signinRequest) {
-        authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        signinRequest.getEmail(),
-                        signinRequest.getPassword()
-                )
-        );
+        authManager.authenticate
+                (
+                        new UsernamePasswordAuthenticationToken
+                                (
+                                        signinRequest.getEmail(),
+                                        signinRequest.getPassword()
+                                )
+                );
 
         var user = repository.findByEmail(signinRequest.getEmail())
                 .orElseThrow(() -> new UserNotFoundException("User not found with email " + signinRequest.getEmail()));

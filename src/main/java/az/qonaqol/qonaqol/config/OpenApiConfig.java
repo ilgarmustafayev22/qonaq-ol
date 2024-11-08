@@ -22,7 +22,7 @@ public class OpenApiConfig {
                                 .scheme("bearer")
                                 .bearerFormat("JWT"))
                 )
-                .info(new Info().title("Spring Shop API"))
+                .info(new Info().title("QONAQOL"))
                 .security(Collections.singletonList(
                         new SecurityRequirement().addList("bearerAuth")
                 ));

@@ -2,7 +2,6 @@ package az.qonaqol.qonaqol.mapper;
 
 import az.qonaqol.qonaqol.dao.entity.ReservationEntity;
 import az.qonaqol.qonaqol.model.dto.ReservationDto;
-import az.qonaqol.qonaqol.model.request.RegisteredCustomerRequest;
 import az.qonaqol.qonaqol.model.request.UnRegisteredCustomerRequest;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

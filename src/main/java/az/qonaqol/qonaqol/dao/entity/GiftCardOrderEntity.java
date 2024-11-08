@@ -1,27 +1,19 @@
 package az.qonaqol.qonaqol.dao.entity;
 
-import az.qonaqol.qonaqol.model.enums.GiftCardType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
-import org.springframework.boot.context.properties.bind.DefaultValue;
-
-import java.time.LocalDateTime;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @Setter
 @Entity
-@Builder
+@SuperBuilder
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString(callSuper = true)
 @Table(name = "gift_card_orders")
-public class GiftCardOrderEntity {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class GiftCardOrderEntity extends BaseEntity {
 
     @Column(name = "sender_name", nullable = false)
     private String senderName;
@@ -40,14 +32,6 @@ public class GiftCardOrderEntity {
 
     @Column(name = "is_completed", columnDefinition = "boolean default false")
     private Boolean isCompleted;
-
-    @CreationTimestamp
-    @Column(name = "created_at", updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
 
     @ManyToOne
     @JoinColumn(name = "gift_card_id", referencedColumnName = "id")

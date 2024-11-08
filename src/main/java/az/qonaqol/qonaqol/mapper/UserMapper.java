@@ -3,10 +3,7 @@ package az.qonaqol.qonaqol.mapper;
 import az.qonaqol.qonaqol.dao.entity.UserEntity;
 import az.qonaqol.qonaqol.model.dto.UserDto;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingConstants;
 import org.mapstruct.ReportingPolicy;
-import org.mapstruct.factory.Mappers;
 
 import static org.mapstruct.MappingConstants.ComponentModel.SPRING;
 
